@@ -110,8 +110,13 @@ prefix:
     Select the device event number [0-30]: 30^C
     ```
 
-1. You should be good to go. Enjoy!
+1. Use `sdl2-jstest` to verify if everything is sane.
+    ```
+    ./sdl2-jstest --list
+    ./sdl2-jstest --test 1
+    ```
 
+1. You should be good to go. Enjoy!
 
 ## Configuring
 

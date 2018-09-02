@@ -39,6 +39,11 @@ class Calibration(object):
             y = -self.c * (self.a - x) / 16384
         elif x > self.b:
             y = self.d * (x - self.b) / 16384
+
+        # Not sure where this comes from... but it makes sdl2-jstest and in-game
+        # movement sane.
+        y /= 256
+        y += 128
         return round(y)
 
     def __str__(self):
@@ -104,14 +109,20 @@ def setup_devices(original_path):
     return raw, fixed
 
 
+def write_event(device, event):
+    device.write_event(event)
+    device.syn()
+
+
 def redirect(from_dev, to_dev, calib, dry_run, filter_evcode):
     while True:
         r, _, _ = select([from_dev], [], [])
         for event in from_dev.read():
             if event.type != MOVED_EVENT:
+                write_event(to_dev, event)
                 continue
-            axis = MAP_EVENT_CODE_TO_AXIS_IDX[event.code]
 
+            axis = MAP_EVENT_CODE_TO_AXIS_IDX[event.code]
             old_val = event.value
             new_val = calib[axis].apply(old_val) if not dry_run else old_val
 
@@ -119,8 +130,7 @@ def redirect(from_dev, to_dev, calib, dry_run, filter_evcode):
                 log.debug('{}\t-> Adjusted value: {}'.format(event, new_val))
 
             event.value = new_val
-            to_dev.write_event(event)
-            to_dev.syn()
+            write_event(to_dev, event)
 
 
 def main():
