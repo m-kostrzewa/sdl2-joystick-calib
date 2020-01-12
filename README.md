@@ -18,7 +18,7 @@ You could workaround this by setting environment variable
 [this answer](https://superuser.com/a/19481) for more info.
 Well, it didn't work for me.
 
-Turns out, SDL2 abandonned `/dev/input/js*` input method in favor of
+Turns out, SDL2 abandoned `/dev/input/js*` input method in favor of
 `/dev/input/event*` API completely
 ([source](https://forums.libsdl.org/viewtopic.php?t=9772)).
 And of course Freespace 2 now uses SDL2. Sad thing is, SDL is supposed to handle
